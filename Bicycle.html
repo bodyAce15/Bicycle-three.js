@@ -77,6 +77,26 @@
         scene.add(dirLight);
 
         // --- VOXEL BUILDER HELPER ---
+
+        function createVoxelMesh(voxels, color) {
+            const geometry = new THREE.BoxGeometry(VOXEL_SIZE - GAP, VOXEL_SIZE - GAP, VOXEL_SIZE - GAP);
+            const material = new THREE.MeshStandardMaterial({ color: color });
+            
+            // We use InstancedMesh for performance
+            const mesh = new THREE.InstancedMesh(geometry, material, voxels.length);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+
+            const dummy = new THREE.Object3D();
+            
+            voxels.forEach((v, i) => {
+                dummy.position.set(v.x * VOXEL_SIZE, v.y * VOXEL_SIZE, v.z * VOXEL_SIZE);
+                dummy.updateMatrix();
+                mesh.setMatrixAt(i, dummy.matrix);
+            });
+
+            return mesh;
+        }
     </script>
 </body>
 </html>

@@ -22,6 +22,61 @@
 <body>
     <div id="info">VOXEL PELICAN RIDING A BICYCLE<br>Drag to rotate | Scroll to zoom</div>
     
-    
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- CONFIGURATION ---
+        const VOXEL_SIZE = 1;
+        const GAP = 0.05; // Slight gap for that "voxel block" look
+        
+        // --- COLORS (Hex) ---
+        const C_WHITE = 0xffffff;
+        const C_ORANGE = 0xffaa00; // Beak/Feet
+        const C_PINK = 0xffc0cb;   // Pouch
+        const C_BLACK = 0x333333;  // Tires/Eyes
+        const C_GREY = 0x888888;   // Metal
+        const C_RED = 0xdc143c;    // Bike Frame
+
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87CEEB); // Sky blue
+        scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(30, 20, 40);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.target.set(0, 5, 0);
+
+        // --- LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(20, 50, 20);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        scene.add(dirLight);
+
+        // --- VOXEL BUILDER HELPER ---
+    </script>
 </body>
 </html>

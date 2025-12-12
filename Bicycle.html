@@ -97,6 +97,35 @@
 
             return mesh;
         }
+
+        // --- MODELING: THE BICYCLE ---
+
+        function createWheel() {
+            const wheelGroup = new THREE.Group();
+            const positions = [];
+            const radius = 4;
+            
+            // Rim
+            for (let i = 0; i < 360; i+=15) {
+                const rad = i * (Math.PI / 180);
+                const x = Math.round(Math.cos(rad) * radius);
+                const y = Math.round(Math.sin(rad) * radius);
+                positions.push({x: x, y: y, z: 0});
+            }
+            // Spokes
+            positions.push({x: 0, y: 0, z: 0}); // Hub
+            positions.push({x: 1, y: 0, z: 0});
+            positions.push({x: -1, y: 0, z: 0});
+            positions.push({x: 0, y: 1, z: 0});
+            positions.push({x: 0, y: -1, z: 0});
+
+            const wheelMesh = createVoxelMesh(positions, C_BLACK);
+            wheelGroup.add(wheelMesh);
+            return wheelGroup;
+        }
+
+        const bikeGroup = new THREE.Group();
+        scene.add(bikeGroup);
     </script>
 </body>
 </html>

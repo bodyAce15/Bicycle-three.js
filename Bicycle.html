@@ -165,6 +165,29 @@
         const seatMesh = createVoxelMesh(seatCoords, C_BLACK);
         bikeGroup.add(seatMesh);
 
+        // 4. Pedals (Anchor point)
+        const pedalGroup = new THREE.Group();
+        pedalGroup.position.set(0, 4, 0);
+        bikeGroup.add(pedalGroup);
+
+        const pedalCrankCoords = [
+            {x:0, y:0, z:0.5}, {x:0, y:1, z:0.5}, // Right crank up
+            {x:0, y:0, z:-0.5}, {x:0, y:-1, z:-0.5} // Left crank down
+        ];
+        const pedalCrankMesh = createVoxelMesh(pedalCrankCoords, C_GREY);
+        pedalGroup.add(pedalCrankMesh);
+
+        // Actual pedals
+        const rightPedal = createVoxelMesh([{x:0,y:0,z:0}], C_BLACK);
+        rightPedal.position.set(0, 1.2, 1);
+        rightPedal.scale.set(1.5, 0.5, 1);
+        pedalGroup.add(rightPedal);
+
+        const leftPedal = createVoxelMesh([{x:0,y:0,z:0}], C_BLACK);
+        leftPedal.position.set(0, -1.2, -1);
+        leftPedal.scale.set(1.5, 0.5, 1);
+        pedalGroup.add(leftPedal);
+
         
     </script>
 </body>

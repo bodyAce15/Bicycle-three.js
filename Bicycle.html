@@ -126,6 +126,15 @@
 
         const bikeGroup = new THREE.Group();
         scene.add(bikeGroup);
+
+        // 1. Wheels
+        const frontWheel = createWheel();
+        frontWheel.position.set(6, 4, 0);
+        bikeGroup.add(frontWheel);
+
+        const backWheel = createWheel();
+        backWheel.position.set(-6, 4, 0);
+        bikeGroup.add(backWheel);
     </script>
 </body>
 </html>

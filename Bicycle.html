@@ -208,6 +208,28 @@
         
         const bodyMesh = createVoxelMesh(bodyCoords, C_WHITE);
         pelicanGroup.add(bodyMesh);
+
+
+        
+        // 2. Neck & Head
+        const neckGroup = new THREE.Group();
+        neckGroup.position.set(1.5, 2.5, 0);
+        pelicanGroup.add(neckGroup);
+
+        const neckCoords = [
+            {x:0, y:0, z:0}, {x:0.2, y:1, z:0}, {x:0.4, y:2, z:0}, // Neck
+            {x:0.4, y:3, z:0}, {x:0.4, y:3, z:-0.5}, {x:0.4, y:3, z:0.5}, // Head back
+            {x:1.4, y:3, z:0}, // Head front
+        ];
+        const neckMesh = createVoxelMesh(neckCoords, C_WHITE);
+        neckGroup.add(neckMesh);
+
+        // Eyes
+        const eyeCoords = [{x:1.4, y:3.2, z:0.6}, {x:1.4, y:3.2, z:-0.6}];
+        const eyeMesh = createVoxelMesh(eyeCoords, C_BLACK);
+        neckGroup.add(eyeMesh); // Add scale adjustment later for small eyes? No, voxels are blocky.
+
+        
     </script>
 </body>
 </html>

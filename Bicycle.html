@@ -188,6 +188,110 @@
         leftPedal.scale.set(1.5, 0.5, 1);
         pedalGroup.add(leftPedal);
 
+         // --- MODELING: THE PELICAN ---
+        const pelicanGroup = new THREE.Group();
+        // Position pelican on the seat
+        pelicanGroup.position.set(-1, 10, 0); 
+        bikeGroup.add(pelicanGroup);
+
+        // 1. Body
+        const bodyCoords = [];
+        for(let x=-1; x<=2; x++) {
+            for(let y=0; y<=2; y++) {
+                for(let z=-1; z<=1; z++) {
+                    bodyCoords.push({x,y,z});
+                }
+            }
+        }
+        // Tail
+        bodyCoords.push({x:-2, y:1, z:0}, {x:-2.5, y:1.5, z:0});
+        
+        const bodyMesh = createVoxelMesh(bodyCoords, C_WHITE);
+        pelicanGroup.add(bodyMesh);
+
+
+        
+        // 2. Neck & Head
+        const neckGroup = new THREE.Group();
+        neckGroup.position.set(1.5, 2.5, 0);
+        pelicanGroup.add(neckGroup);
+
+        const neckCoords = [
+            {x:0, y:0, z:0}, {x:0.2, y:1, z:0}, {x:0.4, y:2, z:0}, // Neck
+            {x:0.4, y:3, z:0}, {x:0.4, y:3, z:-0.5}, {x:0.4, y:3, z:0.5}, // Head back
+            {x:1.4, y:3, z:0}, // Head front
+        ];
+        const neckMesh = createVoxelMesh(neckCoords, C_WHITE);
+        neckGroup.add(neckMesh);
+
+        // Eyes
+        const eyeCoords = [{x:1.4, y:3.2, z:0.6}, {x:1.4, y:3.2, z:-0.6}];
+        const eyeMesh = createVoxelMesh(eyeCoords, C_BLACK);
+        neckGroup.add(eyeMesh); // Add scale adjustment later for small eyes? No, voxels are blocky.
+
+        // 3. Beak (Upper and Lower)
+        const beakGroup = new THREE.Group();
+        beakGroup.position.set(1.5, 3, 0); // Attached to head
+        neckGroup.add(beakGroup);
+
+        const upperBeakCoords = [
+            {x:0, y:0, z:0}, {x:1, y:0, z:0}, {x:2, y:0, z:0}, {x:3, y:0, z:0}, {x:3, y:-0.5, z:0} // Hook
+        ];
+        const upperBeakMesh = createVoxelMesh(upperBeakCoords, C_ORANGE);
+        beakGroup.add(upperBeakMesh);
+
+        const pouchCoords = [
+            {x:0.5, y:-0.5, z:0}, {x:1.5, y:-0.8, z:0}, {x:2.5, y:-0.5, z:0}
+        ];
+        const pouchMesh = createVoxelMesh(pouchCoords, C_PINK);
+        beakGroup.add(pouchMesh);
+
+        // 4. Wings (Groups for animation)
+        const wingShape = [
+            {x:0,y:0,z:0}, {x:1,y:0,z:0}, {x:-1,y:0,z:0},
+            {x:0,y:0,z:1}, {x:1,y:-0.5,z:1}, {x:-1,y:0,z:1},
+            {x:0,y:-1,z:2}, {x:1,y:-1.5,z:2}
+        ];
+        
+        const leftWingGroup = new THREE.Group();
+        leftWingGroup.position.set(0.5, 1.5, 1.2);
+        const lwMesh = createVoxelMesh(wingShape, C_WHITE);
+        leftWingGroup.add(lwMesh);
+        pelicanGroup.add(leftWingGroup);
+
+        const rightWingGroup = new THREE.Group();
+        rightWingGroup.position.set(0.5, 1.5, -1.2);
+        // Flip wing for right side
+        const rwMesh = createVoxelMesh(wingShape, C_WHITE);
+        rwMesh.scale.z = -1; 
+        rightWingGroup.add(rwMesh);
+        pelicanGroup.add(rightWingGroup);
+
+
+        // 5. Legs (Attached to body, feet track pedals)
+        // Since Inverse Kinematics is hard, we will create simple legs that rotate at the hip
+        
+        function createLeg(isRight) {
+            const legG = new THREE.Group();
+            legG.position.set(0.5, 0, isRight ? 1 : -1);
+            
+            // Thigh
+            const thigh = createVoxelMesh([{x:0, y:-1, z:0}, {x:0, y:-2, z:0}], C_WHITE);
+            legG.add(thigh);
+            
+            // Lower leg / Foot
+            const foot = createVoxelMesh([{x:0, y:-3, z:0}, {x:0.5, y:-3, z:0}], C_ORANGE);
+            legG.add(foot);
+            
+            return legG;
+        }
+
+        const rightLeg = createLeg(true);
+        pelicanGroup.add(rightLeg);
+
+        const leftLeg = createLeg(false);
+        pelicanGroup.add(leftLeg);
+
         
     </script>
 </body>

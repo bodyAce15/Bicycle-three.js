@@ -266,6 +266,33 @@
         rwMesh.scale.z = -1; 
         rightWingGroup.add(rwMesh);
         pelicanGroup.add(rightWingGroup);
+
+
+        // 5. Legs (Attached to body, feet track pedals)
+        // Since Inverse Kinematics is hard, we will create simple legs that rotate at the hip
+        
+        function createLeg(isRight) {
+            const legG = new THREE.Group();
+            legG.position.set(0.5, 0, isRight ? 1 : -1);
+            
+            // Thigh
+            const thigh = createVoxelMesh([{x:0, y:-1, z:0}, {x:0, y:-2, z:0}], C_WHITE);
+            legG.add(thigh);
+            
+            // Lower leg / Foot
+            const foot = createVoxelMesh([{x:0, y:-3, z:0}, {x:0.5, y:-3, z:0}], C_ORANGE);
+            legG.add(foot);
+            
+            return legG;
+        }
+
+        const rightLeg = createLeg(true);
+        pelicanGroup.add(rightLeg);
+
+        const leftLeg = createLeg(false);
+        pelicanGroup.add(leftLeg);
+
+        
     </script>
 </body>
 </html>

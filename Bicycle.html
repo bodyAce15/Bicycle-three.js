@@ -246,7 +246,26 @@
         const pouchMesh = createVoxelMesh(pouchCoords, C_PINK);
         beakGroup.add(pouchMesh);
 
+        // 4. Wings (Groups for animation)
+        const wingShape = [
+            {x:0,y:0,z:0}, {x:1,y:0,z:0}, {x:-1,y:0,z:0},
+            {x:0,y:0,z:1}, {x:1,y:-0.5,z:1}, {x:-1,y:0,z:1},
+            {x:0,y:-1,z:2}, {x:1,y:-1.5,z:2}
+        ];
         
+        const leftWingGroup = new THREE.Group();
+        leftWingGroup.position.set(0.5, 1.5, 1.2);
+        const lwMesh = createVoxelMesh(wingShape, C_WHITE);
+        leftWingGroup.add(lwMesh);
+        pelicanGroup.add(leftWingGroup);
+
+        const rightWingGroup = new THREE.Group();
+        rightWingGroup.position.set(0.5, 1.5, -1.2);
+        // Flip wing for right side
+        const rwMesh = createVoxelMesh(wingShape, C_WHITE);
+        rwMesh.scale.z = -1; 
+        rightWingGroup.add(rwMesh);
+        pelicanGroup.add(rightWingGroup);
     </script>
 </body>
 </html>

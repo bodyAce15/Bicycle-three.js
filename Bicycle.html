@@ -188,7 +188,26 @@
         leftPedal.scale.set(1.5, 0.5, 1);
         pedalGroup.add(leftPedal);
 
+         // --- MODELING: THE PELICAN ---
+        const pelicanGroup = new THREE.Group();
+        // Position pelican on the seat
+        pelicanGroup.position.set(-1, 10, 0); 
+        bikeGroup.add(pelicanGroup);
+
+        // 1. Body
+        const bodyCoords = [];
+        for(let x=-1; x<=2; x++) {
+            for(let y=0; y<=2; y++) {
+                for(let z=-1; z<=1; z++) {
+                    bodyCoords.push({x,y,z});
+                }
+            }
+        }
+        // Tail
+        bodyCoords.push({x:-2, y:1, z:0}, {x:-2.5, y:1.5, z:0});
         
+        const bodyMesh = createVoxelMesh(bodyCoords, C_WHITE);
+        pelicanGroup.add(bodyMesh);
     </script>
 </body>
 </html>

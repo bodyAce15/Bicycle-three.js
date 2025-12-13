@@ -229,6 +229,23 @@
         const eyeMesh = createVoxelMesh(eyeCoords, C_BLACK);
         neckGroup.add(eyeMesh); // Add scale adjustment later for small eyes? No, voxels are blocky.
 
+        // 3. Beak (Upper and Lower)
+        const beakGroup = new THREE.Group();
+        beakGroup.position.set(1.5, 3, 0); // Attached to head
+        neckGroup.add(beakGroup);
+
+        const upperBeakCoords = [
+            {x:0, y:0, z:0}, {x:1, y:0, z:0}, {x:2, y:0, z:0}, {x:3, y:0, z:0}, {x:3, y:-0.5, z:0} // Hook
+        ];
+        const upperBeakMesh = createVoxelMesh(upperBeakCoords, C_ORANGE);
+        beakGroup.add(upperBeakMesh);
+
+        const pouchCoords = [
+            {x:0.5, y:-0.5, z:0}, {x:1.5, y:-0.8, z:0}, {x:2.5, y:-0.5, z:0}
+        ];
+        const pouchMesh = createVoxelMesh(pouchCoords, C_PINK);
+        beakGroup.add(pouchMesh);
+
         
     </script>
 </body>

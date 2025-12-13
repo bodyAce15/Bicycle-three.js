@@ -126,6 +126,69 @@
 
         const bikeGroup = new THREE.Group();
         scene.add(bikeGroup);
+
+        // 1. Wheels
+        const frontWheel = createWheel();
+        frontWheel.position.set(6, 4, 0);
+        bikeGroup.add(frontWheel);
+
+        const backWheel = createWheel();
+        backWheel.position.set(-6, 4, 0);
+        bikeGroup.add(backWheel);
+
+        // 2. Frame (Red)
+        const frameCoords = [
+            // Bottom bar
+            {x:-6, y:4, z:0}, {x:-5, y:4, z:0}, {x:-4, y:4, z:0}, {x:-3, y:4, z:0}, {x:-2, y:4, z:0}, 
+            {x:-1, y:4, z:0}, {x:0, y:4, z:0}, {x:1, y:4, z:0}, {x:2, y:5, z:0},
+            // Seat post diagonal
+            {x:-2, y:5, z:0}, {x:-1.5, y:6, z:0}, {x:-1, y:7, z:0}, {x:-0.5, y:8, z:0},
+            // Handlebar post diagonal
+            {x:3, y:6, z:0}, {x:4, y:7, z:0}, {x:5, y:8, z:0}, {x:6, y:4, z:0}, // connects to wheel
+            // Top bar
+            {x:-0.5, y:8, z:0}, {x:0.5, y:8, z:0}, {x:1.5, y:8, z:0}, {x:2.5, y:8, z:0}, {x:3.5, y:8, z:0},
+            // Handlebars (Grey/Metal)
+            {x:4, y:9, z:0}, {x:4, y:9, z:1}, {x:4, y:9, z:-1}, {x:3.5, y:9, z:2}, {x:3.5, y:9, z:-2} 
+        ];
+        
+        // Filter colors for frame
+        const redParts = frameCoords.filter((_, i) => i < frameCoords.length - 5);
+        const greyParts = frameCoords.filter((_, i) => i >= frameCoords.length - 5);
+
+        const frameMesh = createVoxelMesh(redParts, C_RED);
+        const handleMesh = createVoxelMesh(greyParts, C_GREY);
+        bikeGroup.add(frameMesh);
+        bikeGroup.add(handleMesh);
+
+        // 3. Seat
+        const seatCoords = [{x:-1, y:9, z:0}, {x:-1.5, y:9, z:0}, {x:-0.5, y:9, z:0}];
+        const seatMesh = createVoxelMesh(seatCoords, C_BLACK);
+        bikeGroup.add(seatMesh);
+
+        // 4. Pedals (Anchor point)
+        const pedalGroup = new THREE.Group();
+        pedalGroup.position.set(0, 4, 0);
+        bikeGroup.add(pedalGroup);
+
+        const pedalCrankCoords = [
+            {x:0, y:0, z:0.5}, {x:0, y:1, z:0.5}, // Right crank up
+            {x:0, y:0, z:-0.5}, {x:0, y:-1, z:-0.5} // Left crank down
+        ];
+        const pedalCrankMesh = createVoxelMesh(pedalCrankCoords, C_GREY);
+        pedalGroup.add(pedalCrankMesh);
+
+        // Actual pedals
+        const rightPedal = createVoxelMesh([{x:0,y:0,z:0}], C_BLACK);
+        rightPedal.position.set(0, 1.2, 1);
+        rightPedal.scale.set(1.5, 0.5, 1);
+        pedalGroup.add(rightPedal);
+
+        const leftPedal = createVoxelMesh([{x:0,y:0,z:0}], C_BLACK);
+        leftPedal.position.set(0, -1.2, -1);
+        leftPedal.scale.set(1.5, 0.5, 1);
+        pedalGroup.add(leftPedal);
+
+        
     </script>
 </body>
 </html>

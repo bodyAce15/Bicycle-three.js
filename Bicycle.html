@@ -292,7 +292,111 @@
         const leftLeg = createLeg(false);
         pelicanGroup.add(leftLeg);
 
+        const groundGroup = new THREE.Group();
+        scene.add(groundGroup);
         
+        // Create a few trees/clouds to show movement
+        function createCloud(x, z) {
+            const cGroup = new THREE.Group();
+            const coords = [
+                {x:0,y:0,z:0}, {x:1,y:0,z:0}, {x:-1,y:0,z:0}, 
+                {x:0,y:1,z:0}, {x:0.5,y:0.5,z:1}, {x:0.5,y:0.5,z:-1}
+            ];
+            const mesh = createVoxelMesh(coords, 0xffffff);
+            cGroup.add(mesh);
+            cGroup.position.set(x, 15, z);
+            return cGroup;
+        }
+
+        const clouds = [];
+        for(let i=0; i<5; i++) {
+            const c = createCloud(Math.random() * 100 - 50, Math.random() * 20 - 10);
+            clouds.push(c);
+            scene.add(c);
+        }
+
+        const roadGeo = new THREE.PlaneGeometry(200, 20);
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x555555 });
+        const road = new THREE.Mesh(roadGeo, roadMat);
+        road.rotation.x = -Math.PI / 2;
+        road.position.y = -0.5; // Just below wheels
+        scene.add(road);
+
+
+        // Road stripes
+        const stripeGeo = new THREE.PlaneGeometry(4, 1);
+        const stripeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const stripes = [];
+        for(let i=0; i<10; i++) {
+            const stripe = new THREE.Mesh(stripeGeo, stripeMat);
+            stripe.rotation.x = -Math.PI / 2;
+            stripe.position.set(-90 + (i * 20), -0.4, 0);
+            scene.add(stripe);
+            stripes.push(stripe);
+        }
+
+
+         // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const time = clock.getElapsedTime();
+            const delta = clock.getDelta();
+
+            controls.update();
+
+            // 1. Wheel Rotation (Move forward)
+            const speed = 5;
+            frontWheel.rotation.z -= speed * 0.02;
+            backWheel.rotation.z -= speed * 0.02;
+
+            // 2. Pedal Rotation
+            pedalGroup.rotation.z -= speed * 0.02;
+
+            // 3. Leg Movement (Fake Inverse Kinematics)
+            // Right leg tracks right pedal (up at PI/2)
+            rightLeg.rotation.z = Math.sin(time * speed) * 0.5 + 0.2;
+            rightLeg.position.y = Math.cos(time * speed) * 0.2; // slight hip bob
+            
+            // Left leg tracks left pedal (opposite phase)
+            leftLeg.rotation.z = Math.sin(time * speed + Math.PI) * 0.5 + 0.2;
+            leftLeg.position.y = Math.cos(time * speed + Math.PI) * 0.2;
+
+            // 4. Pelican Animation
+            // Flap wings
+            leftWingGroup.rotation.z = Math.sin(time * 10) * 0.5; // Flap Z
+            rightWingGroup.rotation.z = -Math.sin(time * 10) * 0.5;
+            
+            // Bob head
+            neckGroup.rotation.z = Math.sin(time * 2) * 0.1;
+
+            // Bounce entire bike slightly
+            bikeGroup.position.y = Math.sin(time * 20) * 0.05;
+
+            // 5. Environment Movement (Infinite Scroll)
+            stripes.forEach(stripe => {
+                stripe.position.x -= 0.3;
+                if(stripe.position.x < -100) stripe.position.x = 100;
+            });
+
+            clouds.forEach(c => {
+                c.position.x -= 0.1;
+                if(c.position.x < -100) c.position.x = 100;
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle Resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>

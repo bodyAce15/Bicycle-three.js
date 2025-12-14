@@ -322,6 +322,19 @@
         road.position.y = -0.5; // Just below wheels
         scene.add(road);
 
+
+        // Road stripes
+        const stripeGeo = new THREE.PlaneGeometry(4, 1);
+        const stripeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const stripes = [];
+        for(let i=0; i<10; i++) {
+            const stripe = new THREE.Mesh(stripeGeo, stripeMat);
+            stripe.rotation.x = -Math.PI / 2;
+            stripe.position.set(-90 + (i * 20), -0.4, 0);
+            scene.add(stripe);
+            stripes.push(stripe);
+        }
+
     </script>
 </body>
 </html>

@@ -292,7 +292,36 @@
         const leftLeg = createLeg(false);
         pelicanGroup.add(leftLeg);
 
+        const groundGroup = new THREE.Group();
+        scene.add(groundGroup);
         
+        // Create a few trees/clouds to show movement
+        function createCloud(x, z) {
+            const cGroup = new THREE.Group();
+            const coords = [
+                {x:0,y:0,z:0}, {x:1,y:0,z:0}, {x:-1,y:0,z:0}, 
+                {x:0,y:1,z:0}, {x:0.5,y:0.5,z:1}, {x:0.5,y:0.5,z:-1}
+            ];
+            const mesh = createVoxelMesh(coords, 0xffffff);
+            cGroup.add(mesh);
+            cGroup.position.set(x, 15, z);
+            return cGroup;
+        }
+
+        const clouds = [];
+        for(let i=0; i<5; i++) {
+            const c = createCloud(Math.random() * 100 - 50, Math.random() * 20 - 10);
+            clouds.push(c);
+            scene.add(c);
+        }
+
+        const roadGeo = new THREE.PlaneGeometry(200, 20);
+        const roadMat = new THREE.MeshStandardMaterial({ color: 0x555555 });
+        const road = new THREE.Mesh(roadGeo, roadMat);
+        road.rotation.x = -Math.PI / 2;
+        road.position.y = -0.5; // Just below wheels
+        scene.add(road);
+
     </script>
 </body>
 </html>
